@@ -8,4 +8,4 @@ Das Uhrzeit Format wurde im Excel Kalender nicht immer konsequent eingehalten. B
 Natürlich kann man das ganz einfach behandeln, indem mann alle 'whitespace entfernt', dies macht aber das Programm länger und damit unübersichtlicher.
 
 
-![regextester](doc/RegexTesterCapture.png)
+![regextester](doc/RegexTesterCapture.PNG)
