@@ -6,3 +6,6 @@ ohne Leerzeichen vor oder nach dem Bindestrich. In der gleichen Zeile befindet s
 Anlasses in Spalte sechs.
 Das Uhrzeit Format wurde im Excel Kalender nicht immer konsequent eingehalten. Beispiel: Am 19.6. steht "0800 -1200" mit Leerzeichen davor und am 9.10. steht "0900 - 1200" 
 Natürlich kann man das ganz einfach behandeln, indem mann alle 'whitespace entfernt', dies macht aber das Programm länger und damit unübersichtlicher.
+
+
+![regextester](doc\RegexTesterCapture.png)
