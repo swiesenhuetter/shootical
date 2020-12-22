@@ -1,8 +1,17 @@
 from openpyxl import load_workbook
 from icalendar import Calendar, Event
 import datetime
+import urllib.request as urq
 import re
 
+
+def xsl_get():
+    url = 'http://www.psue.ch/calendar/201221_PSUE_Schiesskalender2021.xlsx'
+    local_name = './calendar.xlsx'
+    urq.urlretrieve(url, local_name)
+    wb = load_workbook(filename = local_name)
+    xsl_cal = wb['Hauptplan2021']
+    return xsl_cal
 
 def event_datetime(day, hours_list):
     if not isinstance(day, datetime.datetime):
@@ -40,8 +49,7 @@ def event_from_row(xsl_sheet, row_nr, hours_list):
 
 
 def xl_to_calendar(xslfile):
-    wb = load_workbook(filename = xslfile)
-    xsl_cal = wb['Hauptplan2021']
+    xsl_cal = xsl_get()
     shtime = xsl_cal['C']
     cal = Calendar()
     for t in shtime:
