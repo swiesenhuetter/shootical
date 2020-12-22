@@ -18,7 +18,18 @@ def event_datetime(day, hours_list):
 
 def event_from_row(xsl_sheet, row_nr, hours_list):
     day = xsl_sheet.cell(row_nr, column=1).value
-    event_desc = xsl_sheet.cell(row=row_nr, column=6).value
+#r.d.
+    event_name = xsl_sheet.cell(row=row_nr, column=6).value
+#
+    event_SL1 = xsl_sheet.cell(row=row_nr, column=4).value
+    event_SL2 = xsl_sheet.cell(row=row_nr, column=5).value
+    event_SL1_str = str(xsl_sheet.cell(row=row_nr, column=4).value)
+    event_SL2_str = str(xsl_sheet.cell(row=row_nr, column=5).value)
+    if (( event_SL1_str == "None")  and (event_SL2_str == "None")  ) :
+        event_desc = event_name
+    else:
+        event_desc = "{}   (SL: {} / {} )".format(event_name, event_SL1, event_SL2)
+#r.d.
     evt_from, evt_to = event_datetime(day, hours_list)
     evt_txt  = "Von:{} Bis:{} Veranstaltung:{}".format(evt_from, evt_to, event_desc)
     cal_evt = Event()
@@ -44,7 +55,7 @@ def xl_to_calendar(xslfile):
 
 
 def main():
-    xl_to_calendar('201214_PSUE_Schiesskalender2021.xlsx')
+    xl_to_calendar('201221_PSUE_Schiesskalender2021.xlsx')
 
 
 if __name__ == "__main__":
