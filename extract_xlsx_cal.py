@@ -2,14 +2,18 @@ from openpyxl import load_workbook
 from icalendar import Calendar, Event
 import datetime
 import urllib.request as urq
+import sys
 import re
 
 
+local_name = './calendar.xlsx'
+worksheet = 'Hauptplan2021'
+psue_url = 'http://www.psue.ch/calendar/201221_PSUE_Schiesskalender2021.xlsx'
+
+
 def xsl_get(url):
-    local_name = './calendar.xlsx'
-    urq.urlretrieve(url, local_name)
     wb = load_workbook(filename = local_name)
-    xsl_cal = wb['Hauptplan2021']
+    xsl_cal = wb[worksheet]
     return xsl_cal
 
 def event_datetime(day, hours_list):
@@ -42,14 +46,8 @@ def event_from_row(xsl_sheet, row_nr, hours_list):
     return cal_evt
 
 
-def cal_name(url):
-    cal_file_name = url.rsplit('.', 1)[0]
-    cal_file_name = cal_file_name.rsplit('/', 1)[1] + '.ics'
-    return cal_file_name
-    
-
-def xl_to_calendar(url):
-    xsl_cal = xsl_get(url)
+def xl_to_calendar(xl_filename):
+    xsl_cal = xsl_get(xl_filename)
     shtime = xsl_cal['C']
     cal = Calendar()
     for t in shtime:
@@ -57,14 +55,18 @@ def xl_to_calendar(url):
         if match:
             evt = event_from_row(xsl_cal, t.row, match)
             cal.add_component(evt)
-    cal_file_name = cal_name(url)    
+    cal_file_name = xl_filename.rsplit('.', 1)[0] + '.ics'
     cal_file = open(cal_file_name, 'wb')
     cal_file.write(cal.to_ical())
-
+    print ("{} Events converted form {}".format(len(cal.subcomponents), xl_filename))
 
 def main():
-    url = 'http://www.psue.ch/calendar/201221_PSUE_Schiesskalender2021.xlsx'
-    xl_to_calendar(url)
+    global local_name
+    if len(sys.argv) > 2: # cmd line argument
+        local_name = sys.argv[1]
+    else:    # download
+        urq.urlretrieve(psue_url, local_name)
+    xl_to_calendar(local_name)
 
 
 if __name__ == "__main__":
