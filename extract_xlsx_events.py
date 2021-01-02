@@ -21,12 +21,14 @@ def xsl_get(url):
 
 
 def event_time(hours_list):
+    form = lambda s: re.sub(r'(\d\d)(\d\d)-(\d\d)(\d\d)', r'\1:\2 - \3:\4', s)
+    hours_list = [form(hours) for hours in hours_list]
     return ' und '.join(hours_list)
 
 def event_date(day):
     if not isinstance(day, datetime.datetime):
         return 'Error: {} is not date'.format(day)
-    day_str = datetime.datetime.strftime(day, '%A, %d.%m.%Y')
+    day_str = datetime.datetime.strftime(day, '%d.%m.%Y, %A')
     return day_str
 
 def event_from_row(xsl_sheet, row_nr, hours_list):
