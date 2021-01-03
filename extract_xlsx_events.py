@@ -1,20 +1,14 @@
 from openpyxl import load_workbook
 from collections import namedtuple
 import datetime
-import urllib.request as urq
-import sys
 import re
 import locale
 import html 
 
-
-local_name = './calendar.xlsx'
-worksheet = 'Hauptplan2021'
-psue_url = 'http://www.psue.ch/calendar/201221_PSUE_Schiesskalender2021.xlsx'
-
 EventData = namedtuple('EventData',['date', 'time', 'descr'])
 
-def xsl_get(url):
+def xsl_get(local_name):
+    worksheet = 'Hauptplan2021'
     wb = load_workbook(filename = local_name)
     xsl_cal = wb[worksheet]
     return xsl_cal
@@ -60,15 +54,10 @@ def xl_to_events(xl_filename):
     return events
 
 
-def main():
-    global local_name
-    if len(sys.argv) > 2: # cmd line argument
-        local_name = sys.argv[1]
-    else:    # download
-        urq.urlretrieve(psue_url, local_name)
-    evts = xl_to_events(local_name)
-    print(evts)
+def odd_month(date_str):
+        match = re.findall(r'\d\d.[01][13579].\d{4}',date_str)
+        if match:
+            return True
+        else:
+            return False
 
-
-if __name__ == "__main__":
-    main()

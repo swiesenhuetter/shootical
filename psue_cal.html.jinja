@@ -9,14 +9,15 @@ table {
 }
 
 td, th {
-  border: 1px solid #dddddd;
+  border: 1px solid #000000;
   text-align: left;
   padding: 8px;
 }
 
-tr:nth-child(even) {
-  background-color: #dddddd;
+tr.oddmonth {
+  background-color: #ffdddd;
 }
+
 </style>
 </head>
 <body>
@@ -31,7 +32,11 @@ tr:nth-child(even) {
   </tr>
 
   {% for event in events %}
-  <tr>
+  {% if odd_month(event.date) == True %}
+    <tr class="oddmonth">
+  {% else %}
+    <tr>
+  {% endif %}
       <td>{{ event.date }}</td>
       <td>{{ event.time }}</td>
       <td>{{ event.descr }}</td>
