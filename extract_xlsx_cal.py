@@ -6,7 +6,7 @@ import sys
 import re
 
 
-local_name = './calendar.xlsx'
+local_name = './psue_cal.xlsx'
 worksheet = 'Hauptplan2021'
 psue_url = 'http://www.psue.ch/calendar/201221_PSUE_Schiesskalender2021.xlsx'
 
