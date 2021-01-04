@@ -4,7 +4,7 @@ import urllib.request as urq
 import sys
 
 
-local_name = './calendar.xlsx'
+local_name = 'psue_cal.xlsx'
 psue_url = 'http://www.psue.ch/calendar/201221_PSUE_Schiesskalender2021.xlsx'
 
 
@@ -21,7 +21,7 @@ with open('psue_cal.html.jinja','r') as file:
     template = file.read()
 
 
-event_data = {'events' : extr.xl_to_events('calendar.xlsx')}
+event_data = {'events' : extr.xl_to_events(local_name)}
 
 j2_template = Template(template)
 j2_template.globals['odd_month'] = extr.odd_month
