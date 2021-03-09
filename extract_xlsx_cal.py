@@ -8,7 +8,7 @@ import re
 
 local_name = './psue_cal.xlsx'
 worksheet = 'Hauptplan2021'
-psue_url = 'http://www.psue.ch/calendar/201221_PSUE_Schiesskalender2021.xlsx'
+psue_url = 'http://www.psue.ch/calendar/PSUE_Schiesskalender2021.xlsx'
 
 
 def xsl_get(url):
@@ -62,7 +62,7 @@ def xl_to_calendar(xl_filename):
 
 def main():
     global local_name
-    if len(sys.argv) > 2: # cmd line argument
+    if len(sys.argv) >= 2: # cmd line argument
         local_name = sys.argv[1]
     else:    # download
         urq.urlretrieve(psue_url, local_name)

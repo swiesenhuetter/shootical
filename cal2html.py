@@ -4,14 +4,12 @@ import urllib.request as urq
 import sys
 
 
-local_name = 'psue_cal.xlsx'
-psue_url = 'http://www.psue.ch/calendar/201221_PSUE_Schiesskalender2021.xlsx'
-
-
-if len(sys.argv) > 2: # cmd line argument
+if len(sys.argv) >= 2: # cmd line argument
     local_name = sys.argv[1]
 else:    # download
-    urq.urlretrieve(psue_url, local_name)
+    print ('Try this: ' + __file__ + ' [Excel file name]')
+    exit(0)
+
 evts = extr.xl_to_events(local_name)
 print(evts)
 
