@@ -7,7 +7,7 @@ import re
 
 
 local_name = './psue_cal.xlsx'
-worksheet = 'Hauptplan2021'
+worksheet = 'Hauptplan2022'
 psue_url = 'http://www.psue.ch/calendar/PSUE_Schiesskalender2021.xlsx'
 
 
