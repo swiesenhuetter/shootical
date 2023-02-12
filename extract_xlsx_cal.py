@@ -5,20 +5,22 @@ import urllib.request as urq
 import sys
 import re
 
+local_name = './data/PSUE_Schiesskalender2023.xlsx'
+worksheet = 'Hauptplan2023'
 
-local_name = './data/220514PSUE_Schiesskalender2022.xlsx'
-worksheet = 'Hauptplan2022'
+
 # psue_url = 'http://www.psue.ch/calendar/PSUE_Schiesskalender2021.xlsx'
 
 
 def xsl_get(url):
-    wb = load_workbook(filename = local_name)
+    wb = load_workbook(filename=local_name)
     xsl_cal = wb[worksheet]
     return xsl_cal
 
+
 def event_datetime(day, hours_list):
     if not isinstance(day, datetime.datetime):
-        print ('{} {}'.format(day, hours_list ))
+        print('{} {}'.format(day, hours_list))
         return
     start_txt = hours_list[0][0:4]
     end_txt = hours_list[-1][5:9]
@@ -33,12 +35,12 @@ def event_from_row(xsl_sheet, row_nr, hours_list):
     event_name = xsl_sheet.cell(row=row_nr, column=6).value
     event_SL1 = xsl_sheet.cell(row=row_nr, column=4).value
     event_SL2 = xsl_sheet.cell(row=row_nr, column=5).value
-    if (not event_SL1 and not event_SL2) :
+    if (not event_SL1 and not event_SL2):
         event_desc = event_name
     else:
         event_desc = "{}   (SL: {} / {} )".format(event_name, event_SL1, event_SL2)
     evt_from, evt_to = event_datetime(day, hours_list)
-    evt_txt  = "Von:{} Bis:{} Veranstaltung:{}".format(evt_from, evt_to, event_desc)
+    evt_txt = "Von:{} Bis:{} Veranstaltung:{}".format(evt_from, evt_to, event_desc)
     cal_evt = Event()
     cal_evt['DTSTART'] = evt_from
     cal_evt['DTEND'] = evt_to
@@ -51,18 +53,19 @@ def xl_to_calendar(xl_filename):
     shtime = xsl_cal['C']
     cal = Calendar()
     for t in shtime:
-        match = re.findall(r'\d{4}-\d{4}',t.value)
+        match = re.findall(r'\d{4}-\d{4}', t.value)
         if match:
             evt = event_from_row(xsl_cal, t.row, match)
             cal.add_component(evt)
     cal_file_name = xl_filename.rsplit('.', 1)[0] + '.ics'
     cal_file = open(cal_file_name, 'wb')
     cal_file.write(cal.to_ical())
-    print ("{} Events converted form {}".format(len(cal.subcomponents), xl_filename))
+    print("{} Events converted form {}".format(len(cal.subcomponents), xl_filename))
+
 
 def main():
     global local_name
-    if len(sys.argv) >= 2: # cmd line argument
+    if len(sys.argv) >= 2:  # cmd line argument
         local_name = sys.argv[1]
     # else:    # download
     #     # urq.urlretrieve(psue_url, local_name)
