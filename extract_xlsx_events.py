@@ -9,7 +9,7 @@ EventData = namedtuple('EventData', ['date', 'time', 'descr'])
 
 
 def xsl_get(local_name):
-    worksheet = 'Hauptplan2023'
+    worksheet = 'Hauptplan2024'
     wb = load_workbook(filename=local_name)
     xsl_cal = wb[worksheet]
     return xsl_cal
@@ -50,6 +50,8 @@ def xl_to_events(xl_filename):
     shtime = xsl_cal['C']
     events = []
     for t in shtime:
+        if t.value is None:
+            continue
         match = re.findall(r'\d{4}-\d{4}', t.value)
         if match:
             evt = event_from_row(xsl_cal, t.row, match)

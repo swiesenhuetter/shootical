@@ -5,8 +5,8 @@ import urllib.request as urq
 import sys
 import re
 
-local_name = './data/PSUE_Schiesskalender2023.xlsx'
-worksheet = 'Hauptplan2023'
+local_name = './data/PSUE_Schiesskalender2024.xlsx'
+worksheet = 'Hauptplan2024'
 
 
 # psue_url = 'http://www.psue.ch/calendar/PSUE_Schiesskalender2021.xlsx'
@@ -53,6 +53,8 @@ def xl_to_calendar(xl_filename):
     shtime = xsl_cal['C']
     cal = Calendar()
     for t in shtime:
+        if t.value is None:
+            continue
         match = re.findall(r'\d{4}-\d{4}', t.value)
         if match:
             evt = event_from_row(xsl_cal, t.row, match)
