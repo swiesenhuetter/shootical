@@ -57,6 +57,7 @@ def xl_to_calendar(xl_filename):
     category_training = xsl_cal['G']
     cal_other = Calendar()
     cal_training = Calendar()
+    all_events = Calendar()
     cal_training.add('METHOD', 'REQUEST')
     for row, t in enumerate(evt_time):
         if t.value is None:
@@ -69,9 +70,15 @@ def xl_to_calendar(xl_filename):
                 cal_training.add_component(evt)
             else:
                 cal_other.add_component(evt)
+            all_events.add_component(evt)
+
+    all_cal_file_name = xl_filename.rsplit('.', 1)[0] + '_all.ics'
+    all_cal_file = open(all_cal_file_name, 'wb')
+    all_cal_file.write(all_events.to_ical())
+
     events_cal_file_name = xl_filename.rsplit('.', 1)[0] + '_sonst.ics'
-    cal_file = open(events_cal_file_name, 'wb')
-    cal_file.write(cal_other.to_ical())
+    events_cal_file = open(events_cal_file_name, 'wb')
+    events_cal_file.write(cal_other.to_ical())
 
     training_file_name = xl_filename.rsplit('.', 1)[0] + '_training.ics'
     training_file = open(training_file_name, 'wb')
