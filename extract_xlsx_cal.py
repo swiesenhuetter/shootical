@@ -6,7 +6,6 @@ import sys
 import re
 
 local_name = './data/PSUE Schiesskalender 2026_20260301_1.xlsx'
-worksheet = 'Tabelle1'
 
 
 # psue_url = 'http://www.psue.ch/calendar/PSUE_Schiesskalender2021.xlsx'
@@ -14,7 +13,7 @@ worksheet = 'Tabelle1'
 
 def xsl_get(url):
     wb = load_workbook(filename=local_name)
-    xsl_cal = wb[worksheet]
+    xsl_cal = wb.worksheets[0]  # sheet name changes between years
     return xsl_cal
 
 

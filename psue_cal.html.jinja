@@ -1,64 +1,181 @@
 <!DOCTYPE html>
-<html>
+<html lang="de-ch">
 <head>
 
-<meta http-equiv="Content-Language" content="de-ch">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schiesskalender - Pistolensektion Unterengstringen</title>
 
+<link rel="stylesheet" href="../psue.css?v=20260928f">
 <style>
-table {
-  font-family: arial, sans-serif;
+.cal-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.agenda {
+  font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
 
-td, th {
+.agenda td, .agenda th {
   border: 1px solid #000000;
   text-align: left;
+  vertical-align: top;
   padding: 8px;
 }
 
-tr.oddmonth {
-  background-color: #aaffaa;
+/* One header row per month, stays visible while scrolling through the month */
+.agenda tr.month th {
+  position: sticky;
+  top: 0;
+  background-color: #FFCC00;
+  font-family: Verdana, Geneva, sans-serif;
 }
 
+.agenda .count {
+  float: right;
+  font-weight: normal;
+  font-size: 0.85em;
+}
+
+.agenda .date .short {
+  display: none;
+}
+
+/* On phones: agenda list - short date on the left, title with time below it */
+@media (max-width: 600px) {
+  .agenda, .agenda tbody, .agenda tr, .agenda th, .agenda td {
+    display: block;
+  }
+
+  .agenda thead {
+    display: none; /* Datum/Uhrzeit/Anlass */
+  }
+
+  .agenda tr.month th {
+    border: none;
+    padding: 6px 8px;
+  }
+
+  .agenda tr.event {
+    display: grid;
+    grid-template-columns: 4.5em 1fr;
+    column-gap: 8px;
+    padding: 6px 8px;
+    border-bottom: 1px solid #dddddd;
+  }
+
+  .agenda tr.event td {
+    border: none;
+    padding: 0;
+  }
+
+  .agenda td.date {
+    grid-row: 1 / span 2;
+    font-weight: bold;
+  }
+
+  .agenda .date .long {
+    display: none;
+  }
+
+  .agenda .date .short {
+    display: inline;
+  }
+
+  /* further events on the same day: date stays readable for screen readers */
+  .agenda tr.same-day td.date {
+    color: transparent;
+  }
+
+  .agenda td.descr {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .agenda td.time {
+    grid-column: 2;
+    grid-row: 2;
+    color: #555555;
+    font-size: 0.9em;
+  }
+}
 </style>
-<link rel="stylesheet" href="http://www.psue.ch/psue.css">
 </head>
 <body>
 
-<div id="horizontal_menu" style="height:100%; width:100%; overflow: hidden; margin-bottom: 10px;margin-top: 10px;">
-    <div id="one" style="float: left; width:auto;">
-      <a href="http://www.psue.ch" class="greenbtn">Zur Hauptseite</a>
-    </div>
-    <div id="two" style="float: left; width:auto;">
-      <a href="http://www.psue.ch/calendar/psue_cal.ics" class="greenbtn">Kalender-Import (Link iCalendar File)</a>
-    </div>
+<header class="site-header">
+	<div class="header-inner">
+		<a class="logo" href="../index.htm"><img src="../weblogo1.jpg" alt="Pistolensektion Unterengstringen"></a>
+		<p class="header-title">Pistolensektion <br> Unterengstringen</p>
+		<nav class="topnav">
+			<ul>
+				<li><a href="../index.htm">Home</a></li>
+				<li><a href="../calendar/psue_cal.html" aria-current="page">Agenda</a></li>
+				<li><a href="../ueberuns.htm">&Uuml;ber uns</a></li>
+				<li><a href="../Vorstand.htm">Vorstand</a></li>
+				<li><a href="../Links.htm">Links</a></li>
+			</ul>
+		</nav>
+	</div>
+</header>
+
+<main>
+
+<div class="cal-menu">
+  <a href="psue_cal.ics" class="btn">Kalender-Import (Link iCalendar File)</a>
 </div>
 
-<h1>PSUE Schiesskalender 2024</h1>
+<h1>PSUE Schiesskalender 2026</h1>
 
-<table>
-  <tr>
-    <th>Datum</th>
-    <th>Uhrzeit</th>
-    <th>Anlass</th>
-  </tr>
-
-  {% for event in events %}
-  {% if odd_month(event.date) == True %}
-    <tr class="oddmonth">
-  {% else %}
+<table class="agenda">
+  <thead>
     <tr>
-  {% endif %}
-      <td>{{ event.date }}</td>
-      <td>{{ event.time }}</td>
-      <td>{{ event.descr }}</td>
-  </tr>
-  {% endfor %}
+      <th>Datum</th>
+      <th>Uhrzeit</th>
+      <th>Anlass</th>
+    </tr>
+  </thead>
+{% for month in months %}
+  <tbody id="m-{{ month.events[0].day.strftime('%Y-%m') }}">
+    <tr class="month">
+      <th colspan="3">{{ month.name }} <span class="count">{{ month.events|length }} {{ 'Anlass' if month.events|length == 1 else 'Anl&auml;sse' }}</span></th>
+    </tr>
+  {%- for event in month.events %}
+    <tr class="event{{ ' same-day' if loop.previtem and loop.previtem.day == event.day }}">
+      <td class="date"><span class="long">{{ event.date }}</span><span class="short">{{ event.day.strftime('%a %d.') }}</span></td>
+      <td class="time">{{ event.time }}</td>
+      <td class="descr">{{ event.descr }}</td>
+    </tr>
+  {%- endfor %}
+  </tbody>
+{% endfor %}
 </table>
 <h3>
 {{ date.strftime('Letzte &Auml;nderung am %d. %B %Y') }}
 </h3>
+</main>
+
+<footer class="site-footer">
+	Pistolensektion Unterengstringen
+</footer>
+
+<script>
+// Jump to the current month, or the next one with events. Done here in the
+// browser, because the page is generated once and must work on any day.
+// Month ids are "m-YYYY-MM", so comparing the strings compares the dates.
+(function () {
+  var now = new Date();
+  var key = 'm-' + now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  var months = document.querySelectorAll('.agenda tbody[id]');
+  var target = Array.prototype.find.call(months, function (m) { return m.id >= key; });
+  // calendar over, or the link already points somewhere: stay put
+  if (target && !location.hash) target.scrollIntoView();
+})();
+</script>
 </body>
 </html>
